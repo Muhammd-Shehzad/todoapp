@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +18,30 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   bool isLoading = false;
+
+  void logIn() {
+    auth
+        .signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
+        .then((v) {
+      ToastPoppup().toast('Sign In Successfuly', Colors.green, Colors.white);
+
+      setState(() {
+        isLoading = false;
+        emailController.clear();
+        passwordController.clear();
+      });
+    }).onError((Error, v) {
+      ToastPoppup().toast(Error.toString(), Colors.red, Colors.white);
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: Icon(
             Icons.arrow_back_ios,
-            color: Colors.pink,
+            color: Colors.black,
           ),
         ),
       ),
@@ -92,21 +115,24 @@ class _LoginScreenState extends State<LoginScreen> {
             CustomButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  if (emailController.text.isNotEmpty &&
-                      passwordController.text.isNotEmpty) {
-                    ToastPoppup()
-                        .toast('Account Created', Colors.green, Colors.white);
-                    setState(() {
-                      isLoading = true;
-                    });
-                  } else {
-                    ToastPoppup().toast(
-                        'Account not Created', Colors.green, Colors.white);
-                    setState(() {
-                      isLoading = false;
-                    });
-                  }
+                  logIn();
                 }
+                // if (_formKey.currentState!.validate()) {
+                //   if (emailController.text.isNotEmpty &&
+                //       passwordController.text.isNotEmpty) {
+                //     ToastPoppup()
+                //         .toast('Account Created', Colors.green, Colors.white);
+                //     setState(() {
+                //       isLoading = true;
+                //     });
+                //   } else {
+                //     ToastPoppup().toast(
+                //         'Account not Created', Colors.green, Colors.white);
+                //     setState(() {
+                //       isLoading = false;
+                //     });
+                //   }
+                // }
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

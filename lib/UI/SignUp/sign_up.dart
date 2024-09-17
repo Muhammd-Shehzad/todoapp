@@ -17,9 +17,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  // FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   bool isLoading = false;
+
+  void signUp() {
+    auth
+        .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim())
+        .then((v) {
+      ToastPoppup().toast('Account Created', Colors.green, Colors.white);
+
+      setState(() {
+        isLoading = false;
+        emailController.clear();
+        passwordController.clear();
+      });
+    }).onError((Error, v) {
+      ToastPoppup().toast(Error.toString(), Colors.red, Colors.white);
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +49,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: Text(
           'Sign Up',
           style: TextStyle(
-              color: Colors.pink, fontSize: 20.sp, fontWeight: FontWeight.bold),
+              color: Colors.black,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -89,20 +112,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 : CustomButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        if (emailController.text.isNotEmpty &&
-                            passwordController.text.isNotEmpty) {
-                          ToastPoppup().toast(
-                              'Account Created', Colors.green, Colors.white);
-                          setState(() {
-                            isLoading = true;
-                          });
-                        } else {
-                          ToastPoppup().toast('Account not Created',
-                              Colors.green, Colors.white);
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
+                        signUp();
+
+                        //   if (emailController.text.isNotEmpty &&
+                        //       passwordController.text.isNotEmpty) {
+                        //     ToastPoppup().toast(
+                        //         'Account Created', Colors.green, Colors.white);
+                        //     setState(() {
+                        //       isLoading = true;
+                        //     });
+                        //   } else {
+                        //     ToastPoppup().toast('Account not Created',
+                        //         Colors.green, Colors.white);
+                        //     setState(() {
+                        //       isLoading = false;
+                        //     });
+                        //   }
                       }
                     },
                     text: 'Sing Up',
