@@ -37,9 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         leading: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return SignUpScreen();
-            }));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return SignUpScreen();
+                },
+              ),
+            );
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -58,103 +63,148 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: FirebaseAnimatedList(
-                query: db,
-                itemBuilder: (context, snapshot, _, Index) {
-                  return ListTile(
-                    title:
-                        Text(snapshot.child('$titleController').key.toString()),
-                    subtitle:
-                        Text(snapshot.child('${desController}').key.toString()),
-                  );
-                }),
-          ),
           // Expanded(
-          //   child: ListView.builder(
-          //       itemCount: 5,
-          //       itemBuilder: (context, index) {
-          //         return Padding(
-          //           padding: const EdgeInsets.all(8.0),
-          //           child: Container(
-          //             height: 150.h,
-          //             width: 300.w,
-          //             decoration: BoxDecoration(
-          //               gradient: LinearGradient(
-          //                   colors: [Colors.pink, Colors.pinkAccent],
-          //                   begin: Alignment.topCenter,
-          //                   end: Alignment.bottomCenter),
-          //               borderRadius: BorderRadius.circular(10),
-          //             ),
-          //             child: SingleChildScrollView(
-          //               child: Column(
-          //                 children: [
-          //                   Padding(
-          //                     padding: const EdgeInsets.all(8.0),
-          //                     child: Row(
-          //                       mainAxisAlignment:
-          //                           MainAxisAlignment.spaceBetween,
-          //                       children: [
-          //                         Text(
-          //                           'Title',
-          //                           style: TextStyle(
-          //                               color: Colors.white,
-          //                               fontSize: 20.sp,
-          //                               fontWeight: FontWeight.bold),
-          //                         ),
-          //                         Align(
-          //                           alignment: Alignment.topRight,
-          //                           child: Row(
-          //                             children: [
-          //                               InkWell(
-          //                                 onTap: () {
-          //                                   Navigator.push(context,
-          //                                       MaterialPageRoute(
-          //                                           builder: (context) {
-          //                                     return EditScreen();
-          //                                   }));
-          //                                 },
-          //                                 child: Text(
-          //                                   'Edit',
-          //                                   style: TextStyle(
-          //                                       color: Colors.white,
-          //                                       fontSize: 16.sp,
-          //                                       fontWeight: FontWeight.w400),
-          //                                 ),
-          //                               ),
-          //                               SizedBox(
-          //                                 width: 20.sp,
-          //                               ),
-          //                               InkWell(
-          //                                 onTap: () {},
-          //                                 child: Icon(
-          //                                   Icons.close,
-          //                                   color: Colors.white,
-          //                                 ),
-          //                               ),
-          //                             ],
-          //                           ),
-          //                         )
-          //                       ],
-          //                     ),
-          //                   ),
-          //                   Padding(
-          //                     padding: const EdgeInsets.all(8.0),
-          //                     child: Text(
-          //                       'this is descrabtion of the tilte in whic we can describe the title',
-          //                       style: TextStyle(
-          //                           color: Colors.white,
-          //                           fontSize: 18.sp,
-          //                           fontWeight: FontWeight.w300),
-          //                     ),
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
+          //   child: FirebaseAnimatedList(
+          //       query: db,
+          //       itemBuilder: (context, snapshot, _, Index) {
+          //         return ListTile(
+          //           title: Text(snapshot.child('title').value.toString()),
+          //           subtitle:
+          //               Text(snapshot.child('description').value.toString()),
+          //           trailing: InkWell(
+          //               onTap: () {
+          //                 db
+          //                     .child(snapshot.child('id').value.toString())
+          //                     .remove()
+          //                     .then((v) {
+          //                   ToastPoppup().toast(
+          //                       'Data Deleted', Colors.green, Colors.white);
+          //                 }).onError((Error, index) {
+          //                   ToastPoppup().toast(
+          //                       Error.toString(), Colors.red, Colors.white);
+          //                 });
+          //               },
+          //               child: Icon(Icons.delete)),
           //         );
           //       }),
           // ),
+
+          Expanded(
+            child: FirebaseAnimatedList(
+              query: db,
+              itemBuilder: (context, snapshot, animation, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 150.h,
+                    width: 300.w,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.pink, Colors.pinkAccent],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                snapshot.child('title').value.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return EditScreen(
+                                                title: snapshot
+                                                    .child('title')
+                                                    .value
+                                                    .toString(),
+                                                description: snapshot
+                                                    .child('description'),
+                                                id: snapshot
+                                                    .child('id')
+                                                    .value
+                                                    .toString(),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        'Edit',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 20.sp),
+                                    InkWell(
+                                      onTap: () {
+                                        // Logic for delete
+                                        db
+                                            .child(snapshot
+                                                .child('id')
+                                                .value
+                                                .toString())
+                                            .remove()
+                                            .then((_) {
+                                          ToastPoppup().toast('Data Deleted',
+                                              Colors.green, Colors.white);
+                                        }).onError((error, stackTrace) {
+                                          ToastPoppup().toast(error.toString(),
+                                              Colors.red, Colors.white);
+                                        });
+                                      },
+                                      child: Icon(Icons.close,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              snapshot.child('description').value.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+
           CustomButton(
             onPressed: () {
               showModalBottomSheet(
@@ -165,99 +215,111 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Icon(Icons.close)),
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: TextFormField(
-                              controller: titleController,
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Icon(Icons.close)),
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: TextField(
+                                controller: titleController,
+                                decoration: InputDecoration(
+                                  label: Text('title'),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 1)),
+                                  border: OutlineInputBorder(),
                                 ),
-                                labelText: 'title',
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: TextFormField(
-                              controller: titleController,
-                              textAlign: TextAlign.start,
-                              maxLines: 5,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.black, width: 1),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: TextFormField(
+                                controller: desController,
+                                maxLines: 5,
+                                decoration: InputDecoration(
+                                  label: Text('description'),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: 1),
+                                  ),
                                 ),
-                                labelText: 'Description',
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          CustomButton(
-                            onPressed: () {
-                              String id = DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString();
-                              if (titleController.text.isEmpty &&
-                                  desController.text.isEmpty) {
-                                ToastPoppup().toast('Pleas add data',
-                                    Colors.green, Colors.white);
-                              } else {
-                                print('this is current time ${id}');
+                            SizedBox(
+                              height: 15.h,
+                            ),
+                            CustomButton(
+                              onPressed: () {
+                                String id = DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString();
+                                if (titleController.text.isEmpty &&
+                                    desController.text.isEmpty) {
+                                  ToastPoppup().toast('Pleas add data',
+                                      Colors.green, Colors.white);
+                                  setState(() {
+                                    isdataLoaded = false;
+                                  });
+                                  return;
+                                } else {
+                                  print('this is current time ${id}');
 
-                                db.child(id).set({
-                                  'title': titleController.text.trim(),
-                                  'description': desController.text.trim(),
-                                  'id': id
-                                }).then((v) {
-                                  ToastPoppup().toast(
-                                      'Data Added', Colors.green, Colors.white);
-                                }).onError((Error, v) {
-                                  ToastPoppup().toast(Error.toString(),
-                                      Colors.red, Colors.white);
-                                });
+                                  db.child(id).set({
+                                    'title': titleController.text.trim(),
+                                    'description': desController.text.trim(),
+                                    'id': id
+                                  }).then((v) {
+                                    ToastPoppup().toast('Data Added',
+                                        Colors.green, Colors.white);
+                                    titleController.clear();
+                                    desController.clear();
+                                    setState(() {
+                                      isdataLoaded = false;
+                                    });
+                                  }).onError((Error, v) {
+                                    ToastPoppup().toast(Error.toString(),
+                                        Colors.red, Colors.white);
+                                    setState(() {
+                                      isdataLoaded = false;
+                                    });
+                                  });
 
-                                // db
-                                //     .child('1233')
-                                //     .set({
-                                //       'title': titleController.text,
-                                //       'description': desController.text,
-                                //     })
-                                //     .then((v) {})
-                                //     .onError((Error, v) {
-                                //       print(Error);
-                                //     });
-                              }
-                            },
-                            text: 'ADD TO-DO',
-                            height: 50.h,
-                            weight: 340.w,
-                            color: [
-                              Colors.pink.withOpacity(.9),
-                              Colors.pinkAccent.withOpacity(.6)
-                            ],
-                          ),
-                        ],
+                                  // db
+                                  //     .child('1233')
+                                  //     .set({
+                                  //       'title': titleController.text,
+                                  //       'description': desController.text,
+                                  //     })
+                                  //     .then((v) {})
+                                  //     .onError((Error, v) {
+                                  //       print(Error);
+                                  //     });
+                                }
+                              },
+                              text: 'ADD TO-DO',
+                              height: 50.h,
+                              weight: 340.w,
+                              color: [
+                                Colors.pink.withOpacity(.9),
+                                Colors.pinkAccent.withOpacity(.6)
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   });

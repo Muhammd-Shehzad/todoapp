@@ -130,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         //   }
                       }
                     },
-                    text: 'Sing Up',
+                    text: 'Sign Up',
                     color: [
                       Colors.pink.withOpacity(.9),
                       Colors.pinkAccent.withOpacity(.6)
@@ -161,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     );
                   },
                   child: Text(
-                    'Sing In',
+                    'Sign In',
                     style: TextStyle(
                         color: Colors.blue, fontWeight: FontWeight.w500),
                   ),

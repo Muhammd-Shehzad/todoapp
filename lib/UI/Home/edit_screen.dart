@@ -1,19 +1,29 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
+import 'package:todoapp/Utils/toast_poppup.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({super.key});
+  EditScreen({super.key, this.title, this.description, this.id});
+
+  final title;
+  final description;
+  final id;
 
   @override
   State<EditScreen> createState() => _EditScreenState();
 }
 
 class _EditScreenState extends State<EditScreen> {
+  DatabaseReference db = FirebaseDatabase.instance.ref('todo');
+
   TextEditingController editTitleController = TextEditingController();
   TextEditingController editDescController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    editTitleController.text = widget.title.toString();
+    editDescController.text = widget.description.toString();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -43,7 +53,7 @@ class _EditScreenState extends State<EditScreen> {
             child: TextField(
               controller: editTitleController,
               decoration: InputDecoration(
-                label: Text('Title'),
+                label: Text('title'),
                 enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black, width: 1)),
                 border: OutlineInputBorder(),
@@ -59,7 +69,7 @@ class _EditScreenState extends State<EditScreen> {
               controller: editDescController,
               maxLines: 5,
               decoration: InputDecoration(
-                label: Text('Description'),
+                label: Text('description'),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.black, width: 1),
                 ),
@@ -70,8 +80,19 @@ class _EditScreenState extends State<EditScreen> {
             height: 15.h,
           ),
           CustomButton(
-            onPressed: () {},
-            text: 'Save',
+            onPressed: () {
+              db.child(widget.id).update({
+                'title': editTitleController.text.trim(),
+                'description': editDescController.text.trim(),
+              }).then((value) {
+                ToastPoppup().toast('Updaated', Colors.green, Colors.white);
+                Navigator.pop(context);
+              }).onError((error, stackTrace) {
+                ToastPoppup().toast(error.toString(), Colors.red, Colors.white);
+                Navigator.pop(context);
+              });
+            },
+            text: 'Update',
             height: 50.h,
             weight: 340.w,
             color: [
