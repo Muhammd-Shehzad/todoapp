@@ -61,163 +61,188 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          // Expanded(
-          //   child: FirebaseAnimatedList(
-          //       query: db,
-          //       itemBuilder: (context, snapshot, _, Index) {
-          //         return ListTile(
-          //           title: Text(snapshot.child('title').value.toString()),
-          //           subtitle:
-          //               Text(snapshot.child('description').value.toString()),
-          //           trailing: InkWell(
-          //               onTap: () {
-          //                 db
-          //                     .child(snapshot.child('id').value.toString())
-          //                     .remove()
-          //                     .then((v) {
-          //                   ToastPoppup().toast(
-          //                       'Data Deleted', Colors.green, Colors.white);
-          //                 }).onError((Error, index) {
-          //                   ToastPoppup().toast(
-          //                       Error.toString(), Colors.red, Colors.white);
-          //                 });
-          //               },
-          //               child: Icon(Icons.delete)),
-          //         );
-          //       }),
-          // ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFEBEE), // Light pastel pink
+              Color(0xFFF8BBD0), // Medium pink tone
+              Color(0xFFF48FB1), // Slightly darker pink
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Expanded(
+            //   child: FirebaseAnimatedList(
+            //       query: db,
+            //       itemBuilder: (context, snapshot, _, Index) {
+            //         return ListTile(
+            //           title: Text(snapshot.child('title').value.toString()),
+            //           subtitle:
+            //               Text(snapshot.child('description').value.toString()),
+            //           trailing: InkWell(
+            //               onTap: () {
+            //                 db
+            //                     .child(snapshot.child('id').value.toString())
+            //                     .remove()
+            //                     .then((v) {
+            //                   ToastPoppup().toast(
+            //                       'Data Deleted', Colors.green, Colors.white);
+            //                 }).onError((Error, index) {
+            //                   ToastPoppup().toast(
+            //                       Error.toString(), Colors.red, Colors.white);
+            //                 });
+            //               },
+            //               child: Icon(Icons.delete)),
+            //         );
+            //       }),
+            // ),
 
-          Expanded(
-            child: FirebaseAnimatedList(
-              query: db,
-              itemBuilder: (context, snapshot, animation, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 150.h,
-                    width: 300.w,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.pink, Colors.pinkAccent],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+            Expanded(
+              child: FirebaseAnimatedList(
+                query: db,
+                itemBuilder: (context, snapshot, animation, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 150.h,
+                      width: 300.w,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.pink, Colors.pinkAccent],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                snapshot.child('title').value.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.bold,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  snapshot.child('title').value.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return EditScreen(
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => EditScreen(
                                                 title: snapshot
                                                     .child('title')
                                                     .value
                                                     .toString(),
                                                 description: snapshot
-                                                    .child('description'),
+                                                    .child('description')
+                                                    .value
+                                                    .toString(),
                                                 id: snapshot
                                                     .child('id')
                                                     .value
                                                     .toString(),
-                                              );
-                                            },
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Edit',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                        );
-                                      },
-                                      child: Text(
-                                        'Edit',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: 20.sp),
-                                    InkWell(
-                                      onTap: () {
-                                        // Logic for delete
-                                        db
-                                            .child(snapshot
-                                                .child('id')
-                                                .value
-                                                .toString())
-                                            .remove()
-                                            .then((_) {
-                                          ToastPoppup().toast('Data Deleted',
-                                              Colors.green, Colors.white);
-                                        }).onError((error, stackTrace) {
-                                          ToastPoppup().toast(error.toString(),
-                                              Colors.red, Colors.white);
-                                        });
-                                      },
-                                      child: Icon(Icons.close,
-                                          color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                      SizedBox(width: 20.sp),
+                                      InkWell(
+                                        onTap: () {
+                                          // Logic for delete
+                                          db
+                                              .child(snapshot
+                                                  .child('id')
+                                                  .value
+                                                  .toString())
+                                              .remove()
+                                              .then((_) {
+                                            ToastPoppup().toast('Data Deleted',
+                                                Colors.green, Colors.white);
+                                          }).onError((error, stackTrace) {
+                                            ToastPoppup().toast(
+                                                error.toString(),
+                                                Colors.red,
+                                                Colors.white);
+                                          });
+                                        },
+                                        child: Icon(Icons.close,
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              snapshot.child('description').value.toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w400,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                snapshot.child('description').value.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          CustomButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Container(
-                      width: double.infinity.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        ],
                       ),
-                      child: SingleChildScrollView(
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            CustomButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        height: 600.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFFFFEBEE), // Light pastel pink
+                              Color(0xFFF8BBD0), // Medium pink tone
+                              Color(0xFFF48FB1), // Slightly darker pink
+                            ],
+                          ),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(10),
+                          ),
+                        ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Align(
                                 alignment: Alignment.topRight,
@@ -320,19 +345,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                      ),
-                    );
-                  });
-            },
-            text: 'Add Project',
-            color: [
-              Colors.pink.withOpacity(.9),
-              Colors.pinkAccent.withOpacity(.6)
-            ],
-            height: 50.h,
-            weight: 345.w,
-          ),
-        ],
+                      );
+                    });
+              },
+              text: 'Add Project',
+              color: [
+                Colors.pink.withOpacity(.9),
+                Colors.pinkAccent.withOpacity(.6)
+              ],
+              height: 50.h,
+              weight: 345.w,
+            ),
+          ],
+        ),
       ),
     );
   }

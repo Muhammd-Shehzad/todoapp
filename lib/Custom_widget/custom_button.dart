@@ -22,20 +22,23 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Container(
-        height: height,
-        width: weight,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: color),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 25.sp,
-                fontWeight: FontWeight.w500),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Container(
+          height: height,
+          width: weight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: color),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.sp,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
         ),
       ),

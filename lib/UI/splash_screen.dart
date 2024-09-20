@@ -20,22 +20,35 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Center(child: Image.asset('assets/slogo.png')),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFEBEE), // Light pastel pink
+              Color(0xFFF8BBD0), // Medium pink tone
+              Color(0xFFF48FB1), // Slightly darker pink
+            ],
           ),
-          SizedBox(height: 20.h),
-          Text(
-            'Task Management & TO-DO List',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold),
-          ),
-        ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Center(child: Image.asset('assets/slogo.png')),
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              'Task Management & TO-DO List',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

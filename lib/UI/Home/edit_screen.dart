@@ -38,69 +38,84 @@ class _EditScreenState extends State<EditScreen> {
             },
             child: Icon(Icons.arrow_back_ios)),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Edit Now',
-            style: TextStyle(
-                color: Colors.pink,
-                fontSize: 25.sp,
-                fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFEBEE), // Light pastel pink
+              Color(0xFFF8BBD0), // Medium pink tone
+              Color(0xFFF48FB1), // Slightly darker pink
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextField(
-              controller: editTitleController,
-              decoration: InputDecoration(
-                label: Text('title'),
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 1)),
-                border: OutlineInputBorder(),
-              ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Edit Now',
+              style: TextStyle(
+                  color: Colors.pink,
+                  fontSize: 25.sp,
+                  fontWeight: FontWeight.bold),
             ),
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: TextFormField(
-              controller: editDescController,
-              maxLines: 5,
-              decoration: InputDecoration(
-                label: Text('description'),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 1),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: TextField(
+                controller: editTitleController,
+                decoration: InputDecoration(
+                  label: Text('title'),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                  border: OutlineInputBorder(
+                    gapPadding: 4.0,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
-          CustomButton(
-            onPressed: () {
-              db.child(widget.id).update({
-                'title': editTitleController.text.trim(),
-                'description': editDescController.text.trim(),
-              }).then((value) {
-                ToastPoppup().toast('Updaated', Colors.green, Colors.white);
-                Navigator.pop(context);
-              }).onError((error, stackTrace) {
-                ToastPoppup().toast(error.toString(), Colors.red, Colors.white);
-                Navigator.pop(context);
-              });
-            },
-            text: 'Update',
-            height: 50.h,
-            weight: 340.w,
-            color: [
-              Colors.pink.withOpacity(.9),
-              Colors.pinkAccent.withOpacity(.6)
-            ],
-          ),
-        ],
+            SizedBox(
+              height: 5.h,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: TextFormField(
+                controller: editDescController,
+                maxLines: 5,
+                decoration: InputDecoration(
+                  label: Text('description'),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15.h,
+            ),
+            CustomButton(
+              onPressed: () {
+                db.child(widget.id).update({
+                  'title': editTitleController.text.trim(),
+                  'description': editDescController.text.trim()
+                }).then((value) {
+                  ToastPoppup().toast('Upadted', Colors.green, Colors.white);
+                  Navigator.pop(context);
+                }).onError((error, stackTrace) {
+                  ToastPoppup()
+                      .toast(error.toString(), Colors.red, Colors.white);
+                });
+              },
+              text: 'Update',
+              height: 50.h,
+              weight: 340.w,
+              color: [
+                Colors.pink.withOpacity(.9),
+                Colors.pinkAccent.withOpacity(.6)
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
