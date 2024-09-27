@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
 import 'package:todoapp/UI/Home/edit_screen.dart';
-import 'package:todoapp/UI/SignUp/sign_up.dart';
+import 'package:todoapp/UI/Login/login_Screen.dart';
 import 'package:todoapp/Utils/toast_poppup.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,48 +18,64 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController desController = TextEditingController();
+  TextEditingController SearchController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   bool isdataLoaded = false;
 
   DatabaseReference db = FirebaseDatabase.instance.ref('todo');
+  late Query query;
+  @override
+  void initState() {
+    query = db.orderByChild('uid').equalTo(auth.currentUser!.uid);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'LIST OF TODO',
-          style: TextStyle(
-              color: Colors.pink, fontSize: 20.sp, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return SignUpScreen();
-                },
-              ),
-            );
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
+          title: Text(
+            'LIST OF TODO',
+            style: TextStyle(
+                color: Colors.pink,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold),
           ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.notifications,
-              color: Colors.black,
+          centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.notifications,
+                color: Colors.black,
+              ),
             ),
-          )
-        ],
-      ),
+            InkWell(
+                onTap: () {
+                  auth.signOut().then((v) {
+                    ToastPoppup().toast(
+                        'Log out Successfuly', Colors.green, Colors.white);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return LoginScreen();
+                    })).onError((Error, v) {
+                      ToastPoppup()
+                          .toast(Error.toString(), Colors.red, Colors.white);
+                    });
+                  });
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'log Out',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),),
+          ],),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -76,6 +91,21 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TextField(
+                controller: SearchController,
+                onChanged: (value) {
+                  setState(() {});
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+
             // Expanded(
             //   child: FirebaseAnimatedList(
             //       query: db,
@@ -104,118 +134,251 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Expanded(
               child: FirebaseAnimatedList(
-                query: db,
+                query: query,
                 itemBuilder: (context, snapshot, animation, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 150.h,
-                      width: 300.w,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.pink, Colors.pinkAccent],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                  if (snapshot
+                      .child('title')
+                      .value
+                      .toString()
+                      .contains(SearchController.text.toString())) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 150.h,
+                        width: 300.w,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.pink, Colors.pinkAccent],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  snapshot.child('title').value.toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.bold,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    snapshot.child('title').value.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Row(
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => EditScreen(
-                                                title: snapshot
-                                                    .child('title')
-                                                    .value
-                                                    .toString(),
-                                                description: snapshot
-                                                    .child('description')
-                                                    .value
-                                                    .toString(),
-                                                id: snapshot
-                                                    .child('id')
-                                                    .value
-                                                    .toString(),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditScreen(
+                                                  title: snapshot
+                                                      .child('title')
+                                                      .value
+                                                      .toString(),
+                                                  description: snapshot
+                                                      .child('description')
+                                                      .value
+                                                      .toString(),
+                                                  id: snapshot
+                                                      .child('id')
+                                                      .value
+                                                      .toString(),
+                                                ),
                                               ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
                                             ),
-                                          );
-                                        },
-                                        child: Text(
-                                          'Edit',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: 20.sp),
-                                      InkWell(
-                                        onTap: () {
-                                          // Logic for delete
-                                          db
-                                              .child(snapshot
-                                                  .child('id')
-                                                  .value
-                                                  .toString())
-                                              .remove()
-                                              .then((_) {
-                                            ToastPoppup().toast('Data Deleted',
-                                                Colors.green, Colors.white);
-                                          }).onError((error, stackTrace) {
-                                            ToastPoppup().toast(
-                                                error.toString(),
-                                                Colors.red,
-                                                Colors.white);
-                                          });
-                                        },
-                                        child: Icon(Icons.close,
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                        SizedBox(width: 20.sp),
+                                        InkWell(
+                                          onTap: () {
+                                            // Logic for delete
+                                            db
+                                                .child(snapshot
+                                                    .child('id')
+                                                    .value
+                                                    .toString())
+                                                .remove()
+                                                .then((_) {
+                                              ToastPoppup().toast(
+                                                  'Data Deleted',
+                                                  Colors.green,
+                                                  Colors.white);
+                                            }).onError((error, stackTrace) {
+                                              ToastPoppup().toast(
+                                                  error.toString(),
+                                                  Colors.red,
+                                                  Colors.white);
+                                            });
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                snapshot.child('description').value.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w400,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  snapshot
+                                      .child('description')
+                                      .value
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else if (SearchController.text.toString().isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 150.h,
+                        width: 300.w,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.pink, Colors.pinkAccent],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    snapshot.child('title').value.toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditScreen(
+                                                  title: snapshot
+                                                      .child('title')
+                                                      .value
+                                                      .toString(),
+                                                  description: snapshot
+                                                      .child('description')
+                                                      .value
+                                                      .toString(),
+                                                  id: snapshot
+                                                      .child('id')
+                                                      .value
+                                                      .toString(),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 20.sp),
+                                        InkWell(
+                                          onTap: () {
+                                            // Logic for delete
+                                            db
+                                                .child(snapshot
+                                                    .child('id')
+                                                    .value
+                                                    .toString())
+                                                .remove()
+                                                .then((_) {
+                                              ToastPoppup().toast(
+                                                  'Data Deleted',
+                                                  Colors.green,
+                                                  Colors.white);
+                                            }).onError((error, stackTrace) {
+                                              ToastPoppup().toast(
+                                                  error.toString(),
+                                                  Colors.red,
+                                                  Colors.white);
+                                            });
+                                          },
+                                          child: Icon(Icons.close,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  snapshot
+                                      .child('description')
+                                      .value
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
             ),
@@ -304,6 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   print('this is current time ${id}');
 
                                   db.child(id).set({
+                                    'uid': auth.currentUser!.uid,
                                     'title': titleController.text.trim(),
                                     'description': desController.text.trim(),
                                     'id': id
@@ -348,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     });
               },
-              text: 'Add Project',
+              text: 'Add Task',
               color: [
                 Colors.pink.withOpacity(.9),
                 Colors.pinkAccent.withOpacity(.6)

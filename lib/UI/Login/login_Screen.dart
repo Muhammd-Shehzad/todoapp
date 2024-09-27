@@ -16,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -62,101 +63,129 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Sign In Your Account',
-              style: TextStyle(
-                  color: Colors.pink,
-                  fontSize: 25.sp,
-                  fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter Your Email';
-                  }
-                  return null;
-                },
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Enter Email',
-                  border: OutlineInputBorder(),
-                ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Sign In Your Account',
+                style: TextStyle(
+                    color: Colors.pink,
+                    fontSize: 25.sp,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(
-              height: 8.h,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter Your password';
-                  }
-                  return null;
-                },
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Enter Password',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            CustomButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  logIn();
-                }
-                // if (_formKey.currentState!.validate()) {
-                //   if (emailController.text.isNotEmpty &&
-                //       passwordController.text.isNotEmpty) {
-                //     ToastPoppup()
-                //         .toast('Account Created', Colors.green, Colors.white);
-                //     setState(() {
-                //       isLoading = true;
-                //     });
-                //   } else {
-                //     ToastPoppup().toast(
-                //         'Account not Created', Colors.green, Colors.white);
-                //     setState(() {
-                //       isLoading = false;
-                //     });
-                //   }
-                // }
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return HomeScreen();
-                    },
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter Your Name';
+                    }
+                    return null;
+                  },
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Email',
+                    border: OutlineInputBorder(),
                   ),
-                );
-              },
-              text: 'Sign In',
-              color: [
-                Colors.pink.withOpacity(.9),
-                Colors.pinkAccent.withOpacity(.6)
-              ],
-              height: 50.h,
-              weight: 330.w,
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-          ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter Your Name';
+                    }
+                    return null;
+                  },
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter Your password';
+                    }
+                    return null;
+                  },
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Password',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              CustomButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    logIn();
+                  }
+                  // if (_formKey.currentState!.validate()) {
+                  //   if (emailController.text.isNotEmpty &&
+                  //       passwordController.text.isNotEmpty) {
+                  //     ToastPoppup()
+                  //         .toast('Account Created', Colors.green, Colors.white);
+                  //     setState(() {
+                  //       isLoading = true;
+                  //     });
+                  //   } else {
+                  //     ToastPoppup().toast(
+                  //         'Account not Created', Colors.green, Colors.white);
+                  //     setState(() {
+                  //       isLoading = false;
+                  //     });
+                  //   }
+                  // }
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return HomeScreen();
+                      },
+                    ),
+                  );
+                },
+                text: 'Sign In',
+                color: [
+                  Colors.pink.withOpacity(.9),
+                  Colors.pinkAccent.withOpacity(.6)
+                ],
+                height: 50.h,
+                weight: 330.w,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Do Not have Account?',
+                      style: TextStyle(fontSize: 16.sp)),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text('Sign Up'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
-    ;
   }
 }
