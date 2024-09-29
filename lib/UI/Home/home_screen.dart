@@ -4,12 +4,20 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
+import 'package:todoapp/Custom_widget/nav_bar.dart';
 import 'package:todoapp/UI/Home/edit_screen.dart';
 import 'package:todoapp/UI/Login/login_Screen.dart';
 import 'package:todoapp/Utils/toast_poppup.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({
+    super.key,
+    // required this.name,
+    // required this.email,
+  });
+
+  // final String name;
+  // final String email;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,58 +32,69 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isdataLoaded = false;
 
   DatabaseReference db = FirebaseDatabase.instance.ref('todo');
+
   late Query query;
   @override
   void initState() {
     query = db.orderByChild('uid').equalTo(auth.currentUser!.uid);
+    db.child(auth.currentUser!.uid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+// drawer: NavBar(
+//         // name1: widget.name,
+//         // email1: widget.email,
+//       ),
       appBar: AppBar(
-          title: Text(
-            'LIST OF TODO',
-            style: TextStyle(
-                color: Colors.pink,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.notifications,
-                color: Colors.black,
-              ),
+        title: Text(
+          'LIST OF TODO',
+          style: TextStyle(
+              color: Colors.pink, fontSize: 20.sp, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        leading: Icon(Icons.person),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.notifications,
+              color: Colors.black,
             ),
-            InkWell(
-                onTap: () {
-                  auth.signOut().then((v) {
-                    ToastPoppup().toast(
-                        'Log out Successfuly', Colors.green, Colors.white);
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return LoginScreen();
-                    })).onError((Error, v) {
+          ),
+          InkWell(
+            onTap: () {
+              auth.signOut().then(
+                (v) {
+                  ToastPoppup()
+                      .toast('Log out Successfuly', Colors.green, Colors.white);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  })).onError(
+                    (Error, v) {
                       ToastPoppup()
                           .toast(Error.toString(), Colors.red, Colors.white);
-                    });
-                  });
+                    },
+                  );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'log Out',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ),),
-          ],),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'log Out',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -477,7 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     titleController.clear();
                                     desController.clear();
                                     setState(() {
-                                      isdataLoaded = false;
+                                      isdataLoaded = true;
                                     });
                                   }).onError((Error, v) {
                                     ToastPoppup().toast(Error.toString(),

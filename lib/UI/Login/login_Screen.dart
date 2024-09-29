@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
 import 'package:todoapp/UI/Home/home_screen.dart';
+import 'package:todoapp/UI/SignUp/sign_up.dart';
 import 'package:todoapp/Utils/toast_poppup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,7 +17,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -81,29 +81,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextFormField(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Enter Your Name';
-                    }
-                    return null;
-                  },
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter Email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter Your Name';
+                      return 'Enter Your Email';
                     }
                     return null;
                   },
                   controller: emailController,
                   decoration: InputDecoration(
-                    labelText: 'Enter Name',
+                    labelText: 'Enter Email',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -134,6 +118,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     logIn();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return HomeScreen();
+                    }));
                   }
                   // if (_formKey.currentState!.validate()) {
                   //   if (emailController.text.isNotEmpty &&
@@ -151,14 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   //     });
                   //   }
                   // }
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return HomeScreen();
-                      },
-                    ),
-                  );
                 },
                 text: 'Sign In',
                 color: [
@@ -177,7 +157,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text('Do Not have Account?',
                       style: TextStyle(fontSize: 16.sp)),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SignUpScreen();
+                      }));
+                    },
                     child: Text('Sign Up'),
                   ),
                 ],

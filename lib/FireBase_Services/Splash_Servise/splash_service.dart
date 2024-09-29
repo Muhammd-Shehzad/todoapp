@@ -20,9 +20,7 @@ class SplashService {
       } else {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => SignUpScreen(),
-          ),
+          MaterialPageRoute(builder: (context) => SignUpScreen()),
         );
       }
     });
