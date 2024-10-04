@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todoapp/UI/Home/home_screen.dart';
-import 'package:todoapp/UI/SignUp/sign_up.dart';
+import 'package:todoapp/UI/auth/SignUp/sign_up.dart';
 
 class SplashService {
   void isLogIn(context) {

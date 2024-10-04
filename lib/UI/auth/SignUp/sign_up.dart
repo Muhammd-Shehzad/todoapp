@@ -3,8 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
-import 'package:todoapp/UI/Home/home_screen.dart';
-import 'package:todoapp/UI/Login/login_Screen.dart';
+import 'package:todoapp/UI/auth/Login/login_Screen.dart';
 import 'package:todoapp/Utils/toast_poppup.dart';
 
 class SignUpScreen extends StatefulWidget {

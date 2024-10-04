@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todoapp/Custom_widget/custom_button.dart';
 import 'package:todoapp/UI/Home/home_screen.dart';
-import 'package:todoapp/UI/SignUp/sign_up.dart';
+import 'package:todoapp/UI/auth/SignUp/sign_up.dart';
 import 'package:todoapp/Utils/toast_poppup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -118,10 +118,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     logIn();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return HomeScreen();
-                    }));
                   }
                   // if (_formKey.currentState!.validate()) {
                   //   if (emailController.text.isNotEmpty &&
